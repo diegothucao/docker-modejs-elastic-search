@@ -2,25 +2,25 @@ version: '3.7'
 services:
   proxy:
     restart: always
-    container_name: diego-rabbitmq-nginx
+    container_name: diego-rabbit-nginx
     build:
       dockerfile: Dockerfile
       context: ./nginx
     ports:
       - "80:80"
     links:
-      - diego-rabbitmq
+      - diego-rabbitmq-container
   
-  diego-rabbitmq:
+  diego-rabbitmq-container:
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: diego-rabbitmq
+    container_name: diego-rabbitmq-container
     restart: always
     ports:
       - "8080:8080"
     volumes:
-      - .:/diego-rabbitmq
+      - .:/diegorabbitmq
     tty: true
     environment:
       PORT: 8080
