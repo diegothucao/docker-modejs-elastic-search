@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  proxy:
+    restart: always
+    container_name: diego-rabbitmq-nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "80:80"
+    links:
+      - diego-rabbitmq
+  
+  diego-rabbitmq:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: diego-rabbitmq
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/diego-rabbitmq
+    tty: true
+    environment:
+      PORT: 8080
