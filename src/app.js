@@ -11,7 +11,7 @@ app.use(json({ extended: true, limit: '500mb'}))
 app.use(cors())
 
 app.get('/', (_, res) => {
-	res.send('Diego Cao: Hello RabbitMQ')
+	res.send('Diego Cao: Hello')
   })
 
 let server = app.listen(process.env.PORT || 8080)

@@ -2,38 +2,32 @@ version: '3.7'
 services:
   proxy:
     restart: always
-    container_name: diego-rabbit-nginx
+    container_name: diego-elasticsearch-container-nginx
     build:
       dockerfile: Dockerfile
       context: ./nginx
     ports:
       - "80:80"
     links:
-      - diego-rabbitmq-container
+      - diego-demo-elasticsearch-container
 
-  diego-rabbitmq-service:
-    image: rabbitmq
-    container_name: diego-rabbitmq-service
-    environment: 
-     RABBITMQ_DEFAULT_USER: admin
-     RABBITMQ_DEFAULT_PASS: admin
-     RABBITMQ_DEFAULT_VHOST: /
-    ports:
-     - "15672:15672"
-     - "5672:5672" 
-
-  diego-rabbitmq-container:
+  diego-demo-elasticsearch-container:
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: diego-rabbitmq-container
+    container_name: diego-demo-elasticsearch-container
     restart: always
     ports:
       - "8080:8080"
     volumes:
-      - .:/diegorabbitmq
-    tty: true
+      - .:/elasticsearch
     links:
-      - diego-rabbitmq-service
+     - diego-demo-elasticsearch
+    tty: true
     environment:
       PORT: 8080
+
+  diego-demo-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    ports:
+      - "9200:9200"
