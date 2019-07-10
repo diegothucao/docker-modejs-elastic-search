@@ -1,37 +1,12 @@
 version: '3.7'
 services:
-  proxy:
-    restart: always
-    container_name: diego-elasticsearch-container-nginx
-    build:
-      dockerfile: Dockerfile
-      context: ./nginx
-    ports:
-      - "80:80"
-    links:
-      - diego-demo-elasticsearch-container
-
-  diego-demo-elasticsearch-container:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    container_name: diego-demo-elasticsearch-container
-    restart: always
-    ports:
-      - "8080:8080"
-    volumes:
-      - .:/elasticsearch
-    tty: true
-    environment:
-      PORT: 8080
-
-  es01:
+  diego-elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
-    container_name: es01
+    container_name: diego-elasticsearch
     environment:
-      - node.name=es01
-      - discovery.seed_hosts=es02
-      - cluster.initial_master_nodes=es01,es02
+      - node.name=diego-elasticsearch
+      - discovery.seed_hosts=diego-elasticsearch-second
+      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -45,13 +20,14 @@ services:
       - 9200:9200
     networks:
       - esnet
-  es02:
+  
+  diego-elasticsearch-second:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
-    container_name: es02
+    container_name: diego-elasticsearch-second
     environment:
-      - node.name=es02
-      - discovery.seed_hosts=es01
-      - cluster.initial_master_nodes=es01,es02
+      - node.name=diego-elasticsearch-second
+      - discovery.seed_hosts=diego-elasticsearch
+      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -63,6 +39,11 @@ services:
       - esdata02:/usr/share/elasticsearch/data
     networks:
       - esnet
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    ports:
+      - "5601:5601"   
 
 volumes:
   esdata01:
