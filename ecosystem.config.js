@@ -1,11 +1,10 @@
 module.exports = {
   apps : [{
-    name      : 'diego-service',
+    name      : 'diego-el-service',
     script    : 'dist/app.js',
     env: {
-      name : 'diego-service',
-      NODE_ENV: 'development',
-      REDIS_PASSS: 'diegocao'
+      name : 'diego-el-service',
+      NODE_ENV: 'development'
     }
   }]
 }

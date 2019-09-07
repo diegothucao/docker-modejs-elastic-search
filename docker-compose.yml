@@ -1,12 +1,25 @@
 version: '3.7'
 services:
-  diego-elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
-    container_name: diego-elasticsearch
+  proxy:
+    restart: always
+    container_name: ediego-lasticsearch-nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "80:80"
+    links:
+      - elasticsearch
+      - es02
+      - kibana
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    container_name: elasticsearch
     environment:
-      - node.name=diego-elasticsearch
-      - discovery.seed_hosts=diego-elasticsearch-second
-      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
+      - node.name=elasticsearch
+      - discovery.seed_hosts=es02
+      - cluster.initial_master_nodes=elasticsearch,es02
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -21,13 +34,13 @@ services:
     networks:
       - esnet
   
-  diego-elasticsearch-second:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
-    container_name: diego-elasticsearch-second
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    container_name: es02
     environment:
-      - node.name=diego-elasticsearch-second
-      - discovery.seed_hosts=diego-elasticsearch
-      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
+      - node.name=es02
+      - discovery.seed_hosts=elasticsearch
+      - cluster.initial_master_nodes=elasticsearch,es02
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -41,9 +54,12 @@ services:
       - esnet
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.2.0
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.3.1
     ports:
       - "5601:5601"   
+    networks:
+      - esnet
 
 volumes:
   esdata01:
