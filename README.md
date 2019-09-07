@@ -8,3 +8,122 @@ Step to run
 3. Open [localhost](http://localhost) to see server is running. 
 4. Open [localhost](http://localhost:5601) to open Kibana
 5. Open [localhost](http://localhost:9200) to open ElasticSearch
+
+Create composer
+
+```javascript 
+version: '3.7'
+services:
+  diego-elasticsearch-nginx:
+    container_name: diego-elasticsearch-nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "80:80"
+    networks:
+      - diego
+
+  diego-elasticsearch-server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: diego-elasticsearch-server
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/diego
+    tty: true
+    environment:
+      PORT: 8080
+    networks:
+      - diego
+
+  diego-elasticsearch:
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    container_name: diego-elasticsearch
+    environment:
+      - node.name=diego-elasticsearch
+      - discovery.seed_hosts=diego-elasticsearch-second
+      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - diego
+  
+  diego-elasticsearch-second:
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    container_name: diego-elasticsearch-second
+    environment:
+      - node.name=diego-elasticsearch-second
+      - discovery.seed_hosts=diego-elasticsearch
+      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata02:/usr/share/elasticsearch/data
+    networks:
+      - diego
+
+  diego-kibana:
+    restart: always
+    container_name: diego-kibana
+    image: docker.elastic.co/kibana/kibana:7.3.1
+    ports:
+      - "5601:5601"   
+    networks:
+      - diego
+    environment:
+      ELASTICSEARCH_HOSTS: http://diego-elasticsearch:9200
+
+volumes:
+  esdata01:
+    driver: local
+  esdata02:
+    driver: local
+
+networks:
+  diego:
+    driver: bridge
+```
+
+And Simple NodeJS if needed 
+```Javascript 
+import cors from 'cors'
+import { urlencoded, json } from 'body-parser'
+import dotenv from 'dotenv'
+import express from 'express'
+
+dotenv.load()
+
+const app = express()
+app.use(urlencoded({ extended: true, limit: '500mb'}))
+app.use(json({ extended: true, limit: '500mb'}))
+app.use(cors())
+
+app.get('/', (_, res) => {
+	res.send('Diego Cao: Hello')
+  })
+
+let server = app.listen(process.env.PORT || 8080)
+server.setTimeout(500000)
+```
+
+
