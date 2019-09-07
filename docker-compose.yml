@@ -9,18 +9,18 @@ services:
     ports:
       - "80:80"
     links:
-      - elasticsearch
-      - es02
+      - diego-elasticsearch
+      - diego-elasticsearch-second
       - diego-kibana
 
-  elasticsearch:
+  diego-elasticsearch:
     restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
-    container_name: elasticsearch
+    container_name: diego-elasticsearch
     environment:
-      - node.name=elasticsearch
-      - discovery.seed_hosts=es02
-      - cluster.initial_master_nodes=elasticsearch,es02
+      - node.name=diego-elasticsearch
+      - discovery.seed_hosts=diego-elasticsearch-second
+      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -35,14 +35,14 @@ services:
     networks:
       - esnet
   
-  es02:
+  diego-elasticsearch-second:
     restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
-    container_name: es02
+    container_name: diego-elasticsearch-second
     environment:
-      - node.name=es02
-      - discovery.seed_hosts=elasticsearch
-      - cluster.initial_master_nodes=elasticsearch,es02
+      - node.name=diego-elasticsearch-second
+      - discovery.seed_hosts=diego-elasticsearch
+      - cluster.initial_master_nodes=diego-elasticsearch,diego-elasticsearch-second
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -63,6 +63,8 @@ services:
       - "5601:5601"   
     networks:
       - esnet
+    environment:
+      ELASTICSEARCH_HOSTS: http://diego-elasticsearch:9200
 
 volumes:
   esdata01:
