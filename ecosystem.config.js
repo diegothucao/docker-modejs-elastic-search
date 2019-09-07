@@ -1,9 +1,9 @@
 module.exports = {
   apps : [{
-    name      : 'diego-el-service',
+    name      : 'diego-elasticsearch-service',
     script    : 'dist/app.js',
     env: {
-      name : 'diego-el-service',
+      name : 'diego-elasticsearch-service',
       NODE_ENV: 'development'
     }
   }]
