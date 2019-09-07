@@ -9,7 +9,7 @@ services:
     ports:
       - "80:80"
     networks:
-      - esnet
+      - diego
     links:
       - diego-elasticsearch-server
       - diego-elasticsearch
@@ -30,7 +30,7 @@ services:
     environment:
       PORT: 8080
     networks:
-      - esnet
+      - diego
 
   diego-elasticsearch:
     restart: always
@@ -52,7 +52,7 @@ services:
     ports:
       - 9200:9200
     networks:
-      - esnet
+      - diego
   
   diego-elasticsearch-second:
     restart: always
@@ -72,7 +72,7 @@ services:
     volumes:
       - esdata02:/usr/share/elasticsearch/data
     networks:
-      - esnet
+      - diego
 
   diego-kibana:
     restart: always
@@ -81,7 +81,7 @@ services:
     ports:
       - "5601:5601"   
     networks:
-      - esnet
+      - diego
     environment:
       ELASTICSEARCH_HOSTS: http://diego-elasticsearch:9200
 
@@ -92,4 +92,5 @@ volumes:
     driver: local
 
 networks:
-  esnet:
+  diego:
+    driver: bridge
