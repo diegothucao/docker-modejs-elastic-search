@@ -9,7 +9,7 @@ Step to run
 4. Open [localhost](http://localhost:5601) to open Kibana
 5. Open [localhost](http://localhost:9200) to open ElasticSearch
 
-Create composer
+Create docker-compose
 
 ```javascript 
 version: '3.7'
