@@ -1,8 +1,8 @@
 version: '3.7'
 services:
-  proxy:
+  diego-lasticsearch-nginx:
     restart: always
-    container_name: ediego-lasticsearch-nginx
+    container_name: diego-lasticsearch-nginx
     build:
       dockerfile: Dockerfile
       context: ./nginx
@@ -11,7 +11,7 @@ services:
     links:
       - elasticsearch
       - es02
-      - kibana
+      - diego-kibana
 
   elasticsearch:
     restart: always
@@ -55,9 +55,9 @@ services:
     networks:
       - esnet
 
-  kibana:
+  diego-kibana:
     restart: always
-    container_name: kibana
+    container_name: diego-kibana
     image: docker.elastic.co/kibana/kibana:7.3.1
     ports:
       - "5601:5601"   
