@@ -1,13 +1,15 @@
 version: '3.7'
 services:
-  diego-lasticsearch-nginx:
+  diego-elasticsearch-nginx:
     restart: always
-    container_name: diego-lasticsearch-nginx
+    container_name: diego-elasticsearch-nginx
     build:
       dockerfile: Dockerfile
       context: ./nginx
     ports:
       - "80:80"
+    networks:
+      - esnet
     links:
       - diego-elasticsearch
       - diego-elasticsearch-second
