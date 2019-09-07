@@ -126,4 +126,12 @@ let server = app.listen(process.env.PORT || 8080)
 server.setTimeout(500000)
 ```
 
+If you see any issue, please do not hesitate to create an issue here or can contact me via email cao.trung.thu@gmail.com or [Linkedin](https://www.linkedin.com/in/diegothucao/)
+
+Thanks
+	
+references
+ 1. https://docs.docker.com/install/
+ 2. https://www.elastic.co
+
 
