@@ -1,7 +1,6 @@
 version: '3.7'
 services:
   diego-elasticsearch-nginx:
-    restart: always
     container_name: diego-elasticsearch-nginx
     build:
       dockerfile: Dockerfile
@@ -10,11 +9,6 @@ services:
       - "80:80"
     networks:
       - diego
-    links:
-      - diego-elasticsearch-server
-      - diego-elasticsearch
-      - diego-elasticsearch-second
-      - diego-kibana
 
   diego-elasticsearch-server:
     build:
