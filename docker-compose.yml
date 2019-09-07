@@ -11,9 +11,26 @@ services:
     networks:
       - esnet
     links:
+      - diego-elasticsearch-server
       - diego-elasticsearch
       - diego-elasticsearch-second
       - diego-kibana
+
+  diego-elasticsearch-server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: diego-elasticsearch-server
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/diego
+    tty: true
+    environment:
+      PORT: 8080
+    networks:
+      - esnet
 
   diego-elasticsearch:
     restart: always
