@@ -6,7 +6,7 @@ module.exports = {
       name : 'diego-elasticsearch-service',
       NODE_ENV: 'development',
       PORT: 8080,
-      EL_URL: 'http://localhost:9200'
+      EL_URL: 'http://diego-elasticsearch:9200'
     }
   }]
 }
