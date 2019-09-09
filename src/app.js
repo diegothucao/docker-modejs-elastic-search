@@ -34,7 +34,7 @@ async function run () {
 
 setTimeout(() => {
   run().catch(console.log)
-}, 200000)
+}, 100000)
 
 
 
