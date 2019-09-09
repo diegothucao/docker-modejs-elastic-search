@@ -32,5 +32,9 @@ async function run () {
 }
 
 
-run().catch(console.log)
+setTimeout(() => {
+  run().catch(console.log)
+}, 200000)
+
+
 
