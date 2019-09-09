@@ -19,8 +19,6 @@ app.get('/', (_, res) => {
 let server = app.listen(process.env.PORT || 8080)
 server.setTimeout(500000)
 
-
-
 async function run () {
   const { body } = await client.search({
     index: 'bank',
