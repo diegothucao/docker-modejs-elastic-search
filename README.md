@@ -10,13 +10,15 @@ Step to run
 5. Run Bulk `curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary @accounts.json` to import test data to ElasticSearch
 6. Run open browser: 
 
-    6.1 [http://localhost/states/CA](http://localhost/states/CA), it searches state by `CA`, `CA` can be replaced by another state [here](https://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States)
+    6.1 [http://localhost/all](http://localhost/all) to see all data
 
-    6.2 [http://localhost/must/states/CA/employers/Techade](http://localhost/must/states/CA/employers/Techade), `CA` can be replaed by another state and `Techade` can be replaced by another name. (`must` query test) 
+    6.2 [http://localhost/states/CA](http://localhost/states/CA), it searches state by `CA`, `CA` can be replaced by another state [here](https://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States)
 
-    6.3 [http://localhost/mustnot/states/CA/employers/Techade](http://localhost/mustnot/states/CA/employers/Techade), (`must not` query test) 
+    6.3 [http://localhost/must/states/CA/employers/Techade](http://localhost/must/states/CA/employers/Techade), `CA` can be replaed by another state and `Techade` can be replaced by another name. (`must` query test) 
 
-    6.4 [http://localhost/accounts/516](http://localhost/accounts/516), (`term` query test), '516' can be replace by another account number.
+    6.4 [http://localhost/mustnot/states/CA/employers/Techade](http://localhost/mustnot/states/CA/employers/Techade), (`must not` query test) 
+
+    6.5 [http://localhost/accounts/516](http://localhost/accounts/516), (`term` query test), '516' can be replace by another account number.
 
 Create docker-compose
 
@@ -119,6 +121,14 @@ import { Client } from '@elastic/elasticsearch'
 
 const client = new Client({ node: process.env.EL_URL })
 
+export const getAll = async function getAll() {
+    const { body } = await client.search({
+      index: 'bank'
+    })
+    return body.hits.hits
+  }
+
+
 export const searhState = async function searhState(state) {
     const { body } = await client.search({
       index: 'bank',
@@ -195,6 +205,12 @@ const app = express()
 app.use(urlencoded({ extended: true, limit: '500mb' }))
 app.use(json({ extended: true, limit: '500mb' }))
 app.use(cors())
+
+app.get('/all', (_, res) => {
+  getAll().then(data => {
+    res.send(data)
+  })
+})
 
 app.get('/states/:state', (req, res) => {
   searhState(req.params.state).then(data => {

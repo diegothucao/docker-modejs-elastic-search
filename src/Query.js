@@ -14,6 +14,14 @@ export const searhState = async function searhState(state) {
   
     return body.hits.hits
   }
+
+  export const getAll = async function getAll() {
+    const { body } = await client.search({
+      index: 'bank'
+    })
+    return body.hits.hits
+  }
+
   
   export const searhStateAndEmployer = async function searhStateAndEmployer(state, employer) {
     const { body } = await client.search({
