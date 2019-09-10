@@ -113,26 +113,117 @@ networks:
     driver: bridge
 ```
 
+Make some simply query to test 
+```javascript 
+import { Client } from '@elastic/elasticsearch'
+
+const client = new Client({ node: process.env.EL_URL })
+
+export const searhState = async function searhState(state) {
+    const { body } = await client.search({
+      index: 'bank',
+      body: {
+        query: {
+          match: { state: state }
+        }
+      }
+    })
+  
+    return body.hits.hits
+  }
+  
+  export const searhStateAndEmployer = async function searhStateAndEmployer(state, employer) {
+    const { body } = await client.search({
+      index: 'bank',
+      body: {
+        query: {
+          bool: {
+            must: [
+              { match: { state: state } },
+              { match: { employer: employer } },
+            ]
+          }
+        }
+      }
+    })
+    return body.hits.hits
+  }
+
+    
+  export const searhNotStateAndEmployer = async function searhNotStateAndEmployer(state, employer) {
+    const { body } = await client.search({
+      index: 'bank',
+      body: {
+        query: {
+          bool: {
+            must_not: [
+              { match: { state: state } },
+              { match: { employer: employer } },
+            ]
+          }
+        }
+      }
+    })
+    return body.hits.hits
+  }
+
+  export const termAccountNumber = async function termAccountNumber(account_number) {
+    const { body } = await client.search({
+      index: 'bank',
+      body: {
+        query: {
+          term: {
+            account_number: account_number
+          }
+        }
+      }
+    })
+    return body.hits.hits
+  }
+```
+
 And Simple NodeJS if needed 
 ```Javascript 
 import cors from 'cors'
 import { urlencoded, json } from 'body-parser'
 import dotenv from 'dotenv'
 import express from 'express'
-
+import { searhState, searhStateAndEmployer, searhNotStateAndEmployer, termAccountNumber }  from './Query'
 dotenv.load()
 
 const app = express()
-app.use(urlencoded({ extended: true, limit: '500mb'}))
-app.use(json({ extended: true, limit: '500mb'}))
+app.use(urlencoded({ extended: true, limit: '500mb' }))
+app.use(json({ extended: true, limit: '500mb' }))
 app.use(cors())
 
-app.get('/', (_, res) => {
-	res.send('Diego Cao: Hello')
+app.get('/states/:state', (req, res) => {
+  searhState(req.params.state).then(data => {
+    res.send(data)
   })
+})
+
+app.get('/must/states/:state/employers/:employer', (req, res) => {
+  searhStateAndEmployer(req.params.state, req.params.employer).then(data => {
+    res.send(data)
+  })
+})
+
+
+app.get('/mustnot/states/:state/employers/:employer', (req, res) => {
+  searhNotStateAndEmployer(req.params.state, req.params.employer).then(data => {
+    res.send(data)
+  })
+})
+
+app.get('/accounts/:accountNumber', (req, res) => {
+  termAccountNumber(req.params.accountNumber).then(data => {
+    res.send(data)
+  })
+})
 
 let server = app.listen(process.env.PORT || 8080)
 server.setTimeout(500000)
+
 ```
 
 If you see any issue, please do not hesitate to create an issue here or can contact me via email cao.trung.thu@gmail.com or [Linkedin](https://www.linkedin.com/in/diegothucao/)
