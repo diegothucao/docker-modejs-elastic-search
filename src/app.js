@@ -13,28 +13,28 @@ app.use(json({ extended: true, limit: '500mb'}))
 app.use(cors())
 
 app.get('/', (_, res) => {
-	res.send('Diego Cao: Hello')
+  searhState("CA").then( data => {
+    console.log(data)
+    res.send(data)
+  } ) 
   })
 
 let server = app.listen(process.env.PORT || 8080)
 server.setTimeout(500000)
 
-async function run () {
+async function searhState(search) {
   const { body } = await client.search({
     index: 'bank',
     body: {
       query: {
-        match: { state: 'CA' }
+        match: { state: search }
       }
     }
   })
-  console.log(body.hits.hits)
+
+  return body.hits.hits
 }
 
-
-setTimeout(() => {
-  run().catch(console.log)
-}, 60000)
 
 
 
