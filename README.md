@@ -8,7 +8,7 @@ Step to run
 3. Open [localhost](http://localhost:9200) to see if ElasticSearch works
 4. If it works then open source code folder, open terminal (command) then `cd` to `data` folder 
 5. Run Bulk `curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary @accounts.json` to import test data to ElasticSearch
-6. Run open browser `http://localhost/states/CA`, it searches state by `CA`, `CA` can be replaced by another text.
+6. Run open browser `http://localhost/states/CA`, it searches state by `CA`, `CA` can be replaced by another like `MA`, `AL`, `AK` and so on. Refer the list of states here `https://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States`
 
 Create docker-compose
 
