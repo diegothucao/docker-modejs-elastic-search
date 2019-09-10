@@ -2,11 +2,9 @@ import cors from 'cors'
 import { urlencoded, json } from 'body-parser'
 import dotenv from 'dotenv'
 import express from 'express'
-import { Client } from '@elastic/elasticsearch'
-
+import { searhState, searhStateAndEmployer, searhNotStateAndEmployer, termAccountNumber }  from './Query'
 dotenv.load()
 
-const client = new Client({ node: process.env.EL_URL })
 const app = express()
 app.use(urlencoded({ extended: true, limit: '500mb' }))
 app.use(json({ extended: true, limit: '500mb' }))
@@ -24,37 +22,18 @@ app.get('/must/states/:state/employers/:employer', (req, res) => {
   })
 })
 
+
+app.get('/mustnot/states/:state/employers/:employer', (req, res) => {
+  searhNotStateAndEmployer(req.params.state, req.params.employer).then(data => {
+    res.send(data)
+  })
+})
+
+app.get('/accounts/:accountNumber', (req, res) => {
+  termAccountNumber(req.params.accountNumber).then(data => {
+    res.send(data)
+  })
+})
+
 let server = app.listen(process.env.PORT || 8080)
 server.setTimeout(500000)
-
-async function searhState(state) {
-  const { body } = await client.search({
-    index: 'bank',
-    body: {
-      query: {
-        match: { state: state }
-      }
-    }
-  })
-
-  return body.hits.hits
-}
-
-async function searhStateAndEmployer(state, employer) {
-  const { body } = await client.search({
-    index: 'bank',
-    body: {
-      query: {
-        bool: {
-          must: [
-            { match: { state: state } },
-            { match: { employer: employer } },
-          ]
-        }
-      }
-    }
-  })
-  return body.hits.hits
-}
-
-

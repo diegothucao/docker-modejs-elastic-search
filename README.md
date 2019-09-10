@@ -14,6 +14,9 @@ Step to run
 
     6.2 [http://localhost/must/states/CA/employers/Techade](http://localhost/must/states/CA/employers/Techade), `CA` can be replaed by another state and `Techade` can be replaced by another name. (`must` query test) 
 
+    6.3 [http://localhost/mustnot/states/CA/employers/Techade](http://localhost/mustnot/states/CA/employers/Techade), (`must not` query test) 
+
+    6.4 [http://localhost/accounts/516](http://localhost/accounts/516), (`term` query test), '516' can be replace by another account number.
 
 Create docker-compose
 
