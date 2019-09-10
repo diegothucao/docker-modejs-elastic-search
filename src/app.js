@@ -28,13 +28,13 @@ async function run () {
       }
     }
   })
-  console.log(body)
+  console.log(body.hits.hits)
 }
 
 
 setTimeout(() => {
   run().catch(console.log)
-}, 100000)
+}, 60000)
 
 
 
