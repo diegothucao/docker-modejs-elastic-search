@@ -12,9 +12,8 @@ app.use(urlencoded({ extended: true, limit: '500mb'}))
 app.use(json({ extended: true, limit: '500mb'}))
 app.use(cors())
 
-app.get('/', (_, res) => {
-  searhState("CA").then( data => {
-    console.log(data)
+app.get('/states/:state', (req, res) => {
+  searhState(req.params.state).then( data => {
     res.send(data)
   } ) 
   })
