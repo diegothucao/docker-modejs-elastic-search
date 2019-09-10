@@ -10,7 +10,7 @@ Step to run
 5. Run Bulk `curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary @accounts.json` to import test data to ElasticSearch
 6. Run open browser:
 
-  `http://localhost/states/CA`, it searches state by `CA`, `CA` can be replaced by another like `MA`, `AL`, `AK` and so on. Refer the list of states here `https://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States`
+  `http://localhost/states/CA`, it searches state by `CA`, `CA` can be replaced by another state here `https://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States`
   `http://localhost/must/states/CA/employers/Techade`, `CA` can be replaed by another state and `Techade` can be replaced by another name. (`must` query test)
 
 
