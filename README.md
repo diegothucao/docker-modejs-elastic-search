@@ -5,11 +5,10 @@ This is an essential example to build docker with ElasticSearch, Kibana and Node
 Step to run
 1. Clone the [repo](https://github.com/diegothucao/docker-modejs-elastic-search)
 2. Run development mode `docker-compose up --build`. (Can consider to delete all containers and images for sure by `rm $(docker ps -aq) -f` and `rm $(docker images -a -q) -f` before running `docker-compose up --build`).
-3. Open [localhost](http://localhost) to see server is running. 
-4. Open [localhost](http://localhost:5601) to open Kibana
-5. Open [localhost](http://localhost:9200) to open ElasticSearch
-6. If (3, 4, 5) work then open source code folder, open terminal (command) then `cd` to `data` folder 
-7. Run Bulk `curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary @accounts.json` to import test data to ElasticSearch
+3. Open [localhost](http://localhost:9200) to see if ElasticSearch works
+4. If it works then open source code folder, open terminal (command) then `cd` to `data` folder 
+5. Run Bulk `curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/bank/account/_bulk?pretty' --data-binary @accounts.json` to import test data to ElasticSearch
+6. Run open browser `http://localhost/states/CA`, it searches state by `CA`, `CA` can be replaced by another text.
 
 Create docker-compose
 
