@@ -17,7 +17,8 @@ export const searhState = async function searhState(state) {
 
   export const getAll = async function getAll() {
     const { body } = await client.search({
-      index: 'bank'
+      index: 'bank',
+      size : 10000
     })
     return body.hits.hits
   }
@@ -26,6 +27,7 @@ export const searhState = async function searhState(state) {
   export const searhStateAndEmployer = async function searhStateAndEmployer(state, employer) {
     const { body } = await client.search({
       index: 'bank',
+      size : 10000,
       body: {
         query: {
           bool: {
@@ -44,6 +46,7 @@ export const searhState = async function searhState(state) {
   export const searhNotStateAndEmployer = async function searhNotStateAndEmployer(state, employer) {
     const { body } = await client.search({
       index: 'bank',
+      size : 10000,
       body: {
         query: {
           bool: {
