@@ -1,6 +1,6 @@
 FROM node:12
-RUN mkdir -p /usr/diegorsmq
-WORKDIR /usr/diegorsmq
+RUN mkdir -p /usr/diego
+WORKDIR /usr/diego
 COPY package*.json ./
 RUN npm install -g pm2 yarn
 RUN yarn install
